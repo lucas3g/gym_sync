@@ -19,8 +19,7 @@ model User {
   password  String
   createdAt DateTime  @default(now()) @map("created_at")
   updateAt  DateTime? @updatedAt @map("updated_at")
-
-  role UserRole @default(ADMIN)
+  role      UserRole  @default(ADMIN)
 
   @@map("users")
 }
@@ -40,30 +39,31 @@ model Company {
 model BranchCompany {
   id        Int       @id @default(autoincrement())
   name      String
-  companyId String
+  companyId String    @map("company_id")
   createdAt DateTime  @default(now()) @map("created_at")
   updateAt  DateTime? @updatedAt @map("updated_at")
 
-  company Company @relation(fields: [companyId], references: [id])
+  company            Company             @relation(fields: [companyId], references: [id])
+  accountsReceivable AccountReceivable[]
 
   @@map("branchs")
 }
 
 model Client {
-  id            Int       @id @default(autoincrement())
-  name          String
-  cnpjcpf       String
-  address       String
-  number_adress String
-  neighborhood  String
-  cep           String
-  city          String
-  uf            String
-  phone         String
-  smartphone    String    @map("smart_phone")
-  obs           String
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updateAt      DateTime? @updatedAt @map("updated_at")
+  id           Int       @id @default(autoincrement())
+  name         String
+  cnpjcpf      String
+  address      String
+  numberAdress String    @map("number_address")
+  neighborhood String
+  cep          String
+  city         String
+  uf           String
+  phone        String
+  smartphone   String    @map("smart_phone")
+  obs          String
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updateAt     DateTime? @updatedAt @map("updated_at")
 
   accountsReceivable AccountReceivable[]
 
@@ -71,14 +71,18 @@ model Client {
 }
 
 model AccountReceivable {
-  id        String    @id @default(uuid())
-  clientId  Int
-  sdoc      String
-  ndoc      String
-  createdAt DateTime  @default(now()) @map("created_at")
-  updateAt  DateTime? @updatedAt @map("updated_at")
+  id              String    @id @default(uuid())
+  clientId        Int       @map("client_id")
+  sdoc            String
+  ndoc            String
+  branchCompanyId Int       @map("branch_company_id")
+  amount          Decimal
+  date            DateTime  @default(now())
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updateAt        DateTime? @updatedAt @map("updated_at")
 
-  client Client @relation(fields: [clientId], references: [id])
+  client Client        @relation(fields: [clientId], references: [id])
+  branch BranchCompany @relation(fields: [branchCompanyId], references: [id])
 
   @@map("accounts_receivable")
 }
