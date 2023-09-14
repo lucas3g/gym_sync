@@ -2,7 +2,9 @@ import { PrismaService } from '@/core/database/prisma/prisma.service';
 import { User } from '../../domain/entities/user';
 import { IUserDatasource } from '../../infra/datasources/user-datasource';
 import { UserAdapter } from '../../infra/adapters/user-adapter';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserDatasource implements IUserDatasource {
   constructor(private prisma: PrismaService) {}
 
