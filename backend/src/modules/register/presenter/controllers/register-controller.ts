@@ -7,7 +7,6 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common';
-import { hash } from 'bcryptjs';
 import { z } from 'zod';
 import { RegisterUserUseCase } from '../../domain/use-cases/register-user';
 import { FindUserByEmailUseCaseCase } from '../../domain/use-cases/find-user-by-email-usecase';
