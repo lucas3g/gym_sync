@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@/core/types/either';
-import { IUserRepository } from '../repositories/user-repository';
+import { IAuthRepository } from '../repositories/auth-repository';
 import { IHashCompare } from '@/core/cryptography/hash-compare';
 import { WrongCredentialsError } from './errors/wrong-credentials-error';
 import { IEncrypter } from '@/core/cryptography/encrypter';
@@ -20,7 +20,7 @@ type AuthenticateUserUseCaseResponse = Either<
 @Injectable()
 export class AuthenticateUserUseCase {
   constructor(
-    private userRepository: IUserRepository,
+    private authRepository: IAuthRepository,
     private hashCompare: IHashCompare,
     private encrypter: IEncrypter
   ) {}
@@ -29,7 +29,7 @@ export class AuthenticateUserUseCase {
     email,
     password,
   }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.authRepository.findByEmail(email);
 
     if (!user) {
       return left(new WrongCredentialsError());

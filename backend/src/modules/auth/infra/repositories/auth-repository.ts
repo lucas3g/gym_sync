@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../domain/entities/user';
-import { IUserRepository } from '../../domain/repositories/user-repository';
-import { IUserDatasource } from '../datasources/user-datasource';
+import { IAuthRepository } from '../../domain/repositories/auth-repository';
+import { IAuthDatasource } from '../datasources/auth-datasource';
 import { UserAdapter } from '@/core/types/adapters/user-adapter';
 
 @Injectable()
-export class UserRepository implements IUserRepository {
-  constructor(private datasource: IUserDatasource) {}
+export class AuthRepository implements IAuthRepository {
+  constructor(private datasource: IAuthDatasource) {}
 
   async findByEmail(email: string): Promise<User | null> {
     const result = await this.datasource.findByEmail(email);

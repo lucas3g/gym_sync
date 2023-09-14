@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { IUserDatasource } from './infra/datasources/user-datasource';
-import { UserDatasource } from './external/datasources/user-datasource';
-import { IUserRepository } from './domain/repositories/user-repository';
-import { UserRepository } from './infra/repositories/user-repository';
+import { IAuthDatasource } from './infra/datasources/auth-datasource';
+import { AuthDatasource } from './external/datasources/auth-datasource';
+import { IAuthRepository } from './domain/repositories/auth-repository';
+import { AuthRepository } from './infra/repositories/auth-repository';
 import { AuthenticateUserUseCase } from './domain/use-cases/authenticate-user';
 import { AuthController } from './presenter/controllers/auth.controller';
 import { CryptographyModule } from '@/core/cryptography/cryptography.module';
@@ -36,8 +36,8 @@ import { DatabaseModule } from '@/core/database/database.module';
   controllers: [AuthController],
   providers: [
     JwtStrategy,
-    { provide: IUserDatasource, useClass: UserDatasource },
-    { provide: IUserRepository, useClass: UserRepository },
+    { provide: IAuthDatasource, useClass: AuthDatasource },
+    { provide: IAuthRepository, useClass: AuthRepository },
     AuthenticateUserUseCase,
   ],
 })

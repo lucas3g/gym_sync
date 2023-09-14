@@ -1,10 +1,10 @@
 import { PrismaService } from '@/core/database/prisma/prisma.service';
-import { IUserDatasource } from '../../infra/datasources/user-datasource';
+import { IAuthDatasource } from '../../infra/datasources/auth-datasource';
 import { User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UserDatasource implements IUserDatasource {
+export class AuthDatasource implements IAuthDatasource {
   constructor(private prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<User | null> {
