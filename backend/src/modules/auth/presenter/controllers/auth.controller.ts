@@ -25,17 +25,17 @@ export class AuthController {
   async handle(@Body() body: AuthBodySchema) {
     const { email, password } = body;
 
-    const accessToken = await this.authenticateUserUseCase.execute({
+    const result = await this.authenticateUserUseCase.execute({
       email,
       password,
     });
 
-    if (accessToken.isLeft()) {
-      throw new UnauthorizedException(accessToken.value.message);
+    if (result.isLeft()) {
+      throw new UnauthorizedException(result.value.message);
     }
 
     return {
-      access_token: accessToken.value.accessToken,
+      access_token: result.value.accessToken,
     };
   }
 }

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserAlreadyExistsError } from './errors/user-already-exists-error';
-import { Either, left, right } from '@/core/types/either';
+import { Either, right } from '@/core/types/either';
 import { User } from '../entities/user';
 import { IHashGenerator } from '@/core/cryptography/hash-generator';
 import { IRegisterRepository } from '../repositories/register-repository';
-import { FindUserByEmailUseCaseCase } from './find-user-by-email-usecase';
 
 interface RegisterUserUseCaseRequest {
   name: string;
@@ -23,7 +22,6 @@ type RegisterUserUseCaseResponse = Either<
 export class RegisterUserUseCase {
   constructor(
     private registerRepository: IRegisterRepository,
-    private findUserByEmailUseCase: FindUserByEmailUseCaseCase,
     private hashGenerator: IHashGenerator
   ) {}
 
@@ -32,14 +30,6 @@ export class RegisterUserUseCase {
     email,
     password,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    const userWithSameEmail = await this.findUserByEmailUseCase.execute({
-      email,
-    });
-
-    if (userWithSameEmail.isLeft()) {
-      return left(userWithSameEmail.value);
-    }
-
     const hashedPassword = await this.hashGenerator.hash(password);
 
     const user = User.create({

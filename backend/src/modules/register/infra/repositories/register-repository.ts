@@ -12,7 +12,9 @@ export class RegisterRepository implements IRegisterRepository {
     try {
       await this.datasource.create(user);
     } catch (error) {
-      throw new Error('');
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
     }
   }
 
@@ -28,7 +30,11 @@ export class RegisterRepository implements IRegisterRepository {
 
       return user;
     } catch (error) {
-      throw new Error('');
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+
+      return null;
     }
   }
 }

@@ -32,12 +32,12 @@ export class RegisterController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body;
 
-    const userWithSameEmail = await this.findUserByEmailUseCase.execute({
+    const userAlreadyExists = await this.findUserByEmailUseCase.execute({
       email,
     });
 
-    if (userWithSameEmail.isLeft()) {
-      throw new ConflictException(userWithSameEmail.value.message);
+    if (userAlreadyExists.isLeft()) {
+      throw new ConflictException(userAlreadyExists.value.message);
     }
 
     await this.registerUserUseCase.execute({
