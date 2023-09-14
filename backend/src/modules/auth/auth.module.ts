@@ -1,4 +1,4 @@
-import { Env } from '@/core/env';
+import { Env } from '@/core/env/env';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -12,6 +12,8 @@ import { AuthenticateUserUseCase } from './domain/use-cases/authenticate-user';
 import { AuthController } from './presenter/controllers/auth.controller';
 import { CryptographyModule } from '@/core/cryptography/cryptography.module';
 import { DatabaseModule } from '@/core/database/database.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -36,6 +38,10 @@ import { DatabaseModule } from '@/core/database/database.module';
   controllers: [AuthController],
   providers: [
     JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     { provide: IAuthDatasource, useClass: AuthDatasource },
     { provide: IAuthRepository, useClass: AuthRepository },
     AuthenticateUserUseCase,

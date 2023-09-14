@@ -1,4 +1,4 @@
-import { Env } from '@/core/env';
+import { Env } from '@/core/env/env';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';

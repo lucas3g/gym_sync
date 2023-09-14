@@ -21,3 +21,17 @@ Content-Type: application/json
   "email": "lucas5@gmail.com",
   "password": "123456"
 }
+
+###
+
+# @name create_client
+POST {{baseUrl}}/clients
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Lucas",
+  "email": "lucas5@gmail.com",
+  "password": "123456",
+  "confirmPassword": "1234536"
+}

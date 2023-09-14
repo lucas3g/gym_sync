@@ -60,7 +60,6 @@ model Client {
   city         String
   uf           String
   phone        String
-  smartphone   String    @map("smart_phone")
   obs          String
   createdAt    DateTime  @default(now()) @map("created_at")
   updateAt     DateTime? @updatedAt @map("updated_at")
