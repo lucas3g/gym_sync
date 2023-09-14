@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './core/env';
-import { RegisterModule } from './modules/register/register-module';
+import { RegisterModule } from './modules/register/register.module';
 
 @Module({
   imports: [
