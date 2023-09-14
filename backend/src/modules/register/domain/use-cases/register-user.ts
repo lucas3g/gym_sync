@@ -4,6 +4,7 @@ import { Either, left, right } from '@/core/types/either';
 import { User } from '../entities/user';
 import { IHashGenerator } from '@/core/cyptography/hash-generator';
 import { IRegisterRepository } from '../repositories/register-repository';
+import { FindUserByEmailUseCaseCase } from './find-user-by-email-usecase';
 
 interface RegisterUserUseCaseRequest {
   name: string;
@@ -22,6 +23,7 @@ type RegisterUserUseCaseResponse = Either<
 export class RegisterUserUseCase {
   constructor(
     private registerRepository: IRegisterRepository,
+    private findUserByEmailUseCase: FindUserByEmailUseCaseCase,
     private hashGenerator: IHashGenerator
   ) {}
 
@@ -30,10 +32,12 @@ export class RegisterUserUseCase {
     email,
     password,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    const userWithSameEmail = await this.registerRepository.findByEmail(email);
+    const userWithSameEmail = await this.findUserByEmailUseCase.execute({
+      email,
+    });
 
-    if (userWithSameEmail) {
-      return left(new UserAlreadyExistsError(email));
+    if (userWithSameEmail.isLeft()) {
+      return left(userWithSameEmail.value);
     }
 
     const hashedPassword = await this.hashGenerator.hash(password);

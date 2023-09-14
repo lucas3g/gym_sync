@@ -23,10 +23,6 @@ export class FindUserByEmailUseCaseCase {
   }: FindUserByEmailUseCaseRequest): Promise<FindUserByEmailUseCaseResponse> {
     const userWithSameEmail = await this.registerRepository.findByEmail(email);
 
-    if (userWithSameEmail != null) {
-      return left(new UserAlreadyExistsError(''));
-    }
-
     if (userWithSameEmail) {
       return left(new UserAlreadyExistsError(email));
     }

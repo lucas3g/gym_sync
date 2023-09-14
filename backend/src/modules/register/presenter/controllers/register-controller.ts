@@ -37,9 +37,7 @@ export class RegisterController {
     });
 
     if (userWithSameEmail.isLeft()) {
-      throw new ConflictException(
-        'User with same e-mail address already exists'
-      );
+      throw new ConflictException(userWithSameEmail.value.message);
     }
 
     await this.registerUserUseCase.execute({
