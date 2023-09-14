@@ -1,6 +1,5 @@
-import { User } from '../../domain/entities/user';
+import { User } from '@prisma/client';
 
 export abstract class IUserDatasource {
-  abstract create(user: User): Promise<void>;
-  abstract findByEmail(email: string): Promise<Map<string, unknown> | null>;
+  abstract findByEmail(email: string): Promise<User | null>;
 }

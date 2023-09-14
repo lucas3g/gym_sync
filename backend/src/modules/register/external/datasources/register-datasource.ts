@@ -1,7 +1,7 @@
 import { PrismaService } from '@/core/database/prisma/prisma.service';
 import { User } from '../../domain/entities/user';
 import { IRegisterDatasource } from '../../infra/datasources/register-datasource';
-import { UserAdapter } from '../../infra/adapters/user-adapter';
+import { UserAdapter } from '../../../../core/types/adapters/user-adapter';
 import { User as PrismaUser } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 

@@ -1,19 +1,22 @@
+import { Injectable } from '@nestjs/common';
 import { User } from '../../domain/entities/user';
 import { IUserRepository } from '../../domain/repositories/user-repository';
 import { IUserDatasource } from '../datasources/user-datasource';
+import { UserAdapter } from '@/core/types/adapters/user-adapter';
 
+@Injectable()
 export class UserRepository implements IUserRepository {
   constructor(private datasource: IUserDatasource) {}
 
-  async create(user: User): Promise<void> {
-    try {
-      await this.datasource.create(user);
-    } catch (error) {
-      throw new Error('');
-    }
-  }
+  async findByEmail(email: string): Promise<User | null> {
+    const result = await this.datasource.findByEmail(email);
 
-  findByEmail(email: string): Promise<User | null> {
-    throw new Error('Method not implemented.');
+    if (!result) {
+      return null;
+    }
+
+    const user = UserAdapter.toDomain(result);
+
+    return user;
   }
 }

@@ -1,5 +1,5 @@
 import { User as UserPrisma, Prisma } from '@prisma/client';
-import { User } from '../../domain/entities/user';
+import { User } from '../../../modules/register/domain/entities/user';
 
 export class UserAdapter {
   static toPrisma(user: User): Prisma.UserUncheckedCreateInput {

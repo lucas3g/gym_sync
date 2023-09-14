@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserAlreadyExistsError } from './errors/user-already-exists-error';
 import { Either, left, right } from '@/core/types/either';
 import { User } from '../entities/user';
-import { IHashGenerator } from '@/core/cyptography/hash-generator';
+import { IHashGenerator } from '@/core/cryptography/hash-generator';
 import { IRegisterRepository } from '../repositories/register-repository';
 import { FindUserByEmailUseCaseCase } from './find-user-by-email-usecase';
 

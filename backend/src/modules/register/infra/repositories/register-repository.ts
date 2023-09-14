@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../domain/entities/user';
 import { IRegisterRepository } from '../../domain/repositories/register-repository';
-import { UserAdapter } from '../adapters/user-adapter';
+import { UserAdapter } from '../../../../core/types/adapters/user-adapter';
 import { IRegisterDatasource } from '../datasources/register-datasource';
 
 @Injectable()
