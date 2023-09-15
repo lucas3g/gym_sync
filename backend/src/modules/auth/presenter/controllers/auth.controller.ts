@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
@@ -8,6 +9,8 @@ import {
 import { z } from 'zod';
 import { AuthenticateUserUseCase } from '../../domain/use-cases/authenticate-user';
 import { ZodValidationPipe } from '@/core/pipes/zod-validation-pipe';
+import { WrongCredentialsError } from '../../domain/use-cases/errors/wrong-credentials-error';
+import { Public } from '@/core/public';
 
 const authBodySchema = z.object({
   email: z.string().email(),
@@ -17,6 +20,7 @@ const authBodySchema = z.object({
 type AuthBodySchema = z.infer<typeof authBodySchema>;
 
 @Controller('/sessions')
+@Public()
 export class AuthController {
   constructor(private authenticateUserUseCase: AuthenticateUserUseCase) {}
 
@@ -31,11 +35,20 @@ export class AuthController {
     });
 
     if (result.isLeft()) {
-      throw new UnauthorizedException(result.value.message);
+      const error = result.value;
+
+      switch (error.constructor) {
+        case WrongCredentialsError:
+          throw new UnauthorizedException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
     }
 
+    const { accessToken } = result.value;
+
     return {
-      access_token: result.value.accessToken,
+      access_token: accessToken,
     };
   }
 }

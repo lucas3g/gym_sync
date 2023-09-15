@@ -1,14 +1,13 @@
 import { ZodValidationPipe } from '@/core/pipes/zod-validation-pipe';
-import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard';
 import {
   Body,
   Controller,
   NotAcceptableException,
   Post,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { z } from 'zod';
+import { CreateClientUseCase } from '../../domain/use-cases/create-client';
 
 const createClientBodySchema = z.object({
   name: z.string(),
@@ -20,12 +19,12 @@ const createClientBodySchema = z.object({
 type CreateClientBodySchema = z.infer<typeof createClientBodySchema>;
 
 @Controller('/clients')
-@UseGuards(JwtAuthGuard)
 @UsePipes(new ZodValidationPipe(createClientBodySchema))
 export class ClientController {
+  constructor(private createClientUseCase: CreateClientUseCase) {}
   @Post()
   async create(@Body() body: CreateClientBodySchema) {
-    const { name, email, password, confirmPassword } = body;
+    const { password, confirmPassword } = body;
 
     if (password !== confirmPassword) {
       throw new NotAcceptableException(
@@ -33,6 +32,10 @@ export class ClientController {
       );
     }
 
-    return body;
+    const result = await this.createClientUseCase.execute(body);
+
+    if (result.isLeft()) {
+      throw new NotAcceptableException(result.value.message);
+    }
   }
 }

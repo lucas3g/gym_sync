@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserAlreadyExistsError } from './errors/user-already-exists-error';
-import { Either, right } from '@/core/types/either';
+import { Either, left, right } from '@/core/types/either';
 import { User } from '../entities/user';
 import { IHashGenerator } from '@/core/cryptography/hash-generator';
 import { IRegisterRepository } from '../repositories/register-repository';
@@ -30,6 +30,12 @@ export class RegisterUserUseCase {
     email,
     password,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
+    const userWithSameEmail = await this.registerRepository.findByEmail(email);
+
+    if (userWithSameEmail) {
+      return left(new UserAlreadyExistsError(email));
+    }
+
     const hashedPassword = await this.hashGenerator.hash(password);
 
     const user = User.create({

@@ -1,7 +1,8 @@
 import { Either, right } from '@/core/types/either';
 import { Client } from '../entities/client';
-import { WrongCredentialsError } from '@/modules/auth/domain/use-cases/errors/wrong-credentials-error';
 import { IClientRepository } from '../repositories/client-repository';
+import { Injectable } from '@nestjs/common';
+import { WrongDataCreateClientError } from './errors/wrong-data-create-client-error';
 
 interface CreateClientUseCaseRequest {
   name: string;
@@ -10,19 +11,14 @@ interface CreateClientUseCaseRequest {
 }
 
 type CreateClientUseCaseResponse = Either<
-  WrongCredentialsError,
+  WrongDataCreateClientError,
   {
     client: Client;
   }
 >;
 
-export abstract class ICreateClientUseCase {
-  abstract execute(
-    client: CreateClientUseCaseRequest
-  ): Promise<CreateClientUseCaseResponse>;
-}
-
-export class CreateClientUseCase implements ICreateClientUseCase {
+@Injectable()
+export class CreateClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
   async execute(
     client: CreateClientUseCaseRequest

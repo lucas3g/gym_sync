@@ -1,5 +1,6 @@
 import { ZodValidationPipe } from '@/core/pipes/zod-validation-pipe';
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -9,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 import { RegisterUserUseCase } from '../../domain/use-cases/register-user';
-import { FindUserByEmailUseCaseCase } from '../../domain/use-cases/find-user-by-email-usecase';
+import { UserAlreadyExistsError } from '../../domain/use-cases/errors/user-already-exists-error';
+import { Public } from '@/core/public';
 
 const createAccountBodySchema = z.object({
   name: z.string(),
@@ -20,11 +22,9 @@ const createAccountBodySchema = z.object({
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>;
 
 @Controller('/accounts')
+@Public()
 export class RegisterController {
-  constructor(
-    private registerUserUseCase: RegisterUserUseCase,
-    private findUserByEmailUseCase: FindUserByEmailUseCaseCase
-  ) {}
+  constructor(private registerUserUseCase: RegisterUserUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -32,18 +32,21 @@ export class RegisterController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body;
 
-    const userAlreadyExists = await this.findUserByEmailUseCase.execute({
-      email,
-    });
-
-    if (userAlreadyExists.isLeft()) {
-      throw new ConflictException(userAlreadyExists.value.message);
-    }
-
-    await this.registerUserUseCase.execute({
+    const result = await this.registerUserUseCase.execute({
       name,
       email,
       password,
     });
+
+    if (result.isLeft()) {
+      const error = result.value;
+
+      switch (error.constructor) {
+        case UserAlreadyExistsError:
+          throw new ConflictException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
+    }
   }
 }
