@@ -12,8 +12,16 @@ import { CreateClientUseCase } from '../../domain/use-cases/create-client';
 const createClientBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  password: z.string(),
-  confirmPassword: z.string(),
+  password: z.string().min(6),
+  confirmPassword: z.string().min(6),
+  cnpjcpf: z.string(),
+  address: z.string(),
+  numberAddress: z.string().default('S/N'),
+  neighborhood: z.string().default('Centro'),
+  cep: z.string(),
+  city: z.string(),
+  uf: z.string().default('RS'),
+  phone: z.string(),
 });
 
 type CreateClientBodySchema = z.infer<typeof createClientBodySchema>;

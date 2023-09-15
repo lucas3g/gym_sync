@@ -30,8 +30,16 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Lucas",
+  "name": "Lucas Silva",
   "email": "lucas5@gmail.com",
   "password": "123456",
-  "confirmPassword": "1234536"
+  "confirmPassword": "123456",
+  "cnpjcpf":"041.726.830-02",
+  "address":"Avenida 7 de Setembro",
+  "numberAddress":"822",
+  "neighborhood":"Centro",
+  "cep":"99670-000",
+  "city":"Ronda Alta",
+  "uf":"RS",
+  "phone":"5499727330"
 }

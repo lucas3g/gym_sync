@@ -1,14 +1,8 @@
 import { Either, right } from '@/core/types/either';
-import { Client } from '../entities/client';
+import { Client, ClientProps } from '../entities/client';
 import { IClientRepository } from '../repositories/client-repository';
 import { Injectable } from '@nestjs/common';
 import { WrongDataCreateClientError } from './errors/wrong-data-create-client-error';
-
-interface CreateClientUseCaseRequest {
-  name: string;
-  email: string;
-  password: string;
-}
 
 type CreateClientUseCaseResponse = Either<
   WrongDataCreateClientError,
@@ -20,21 +14,19 @@ type CreateClientUseCaseResponse = Either<
 @Injectable()
 export class CreateClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
-  async execute(
-    client: CreateClientUseCaseRequest
-  ): Promise<CreateClientUseCaseResponse> {
+  async execute(client: ClientProps): Promise<CreateClientUseCaseResponse> {
     const result = Client.create({
       name: client.name,
       email: client.email,
-      address: '',
-      cep: '',
-      city: '',
-      cnpjcpf: '',
-      neighborhood: '',
-      numberAddress: '',
-      password: '',
-      phone: '',
-      uf: '',
+      address: client.address,
+      cep: client.cep,
+      city: client.city,
+      cnpjcpf: client.cnpjcpf,
+      neighborhood: client.neighborhood,
+      numberAddress: client.numberAddress,
+      password: client.password,
+      phone: client.phone,
+      uf: client.uf,
     });
 
     await this.clientRepository.create(result);
