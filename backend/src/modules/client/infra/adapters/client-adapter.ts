@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Client as ClientPrisma, Prisma } from '@prisma/client';
 import { Client, ClientProps } from '../../domain/entities/client';
 
 export class ClientAdapter {
@@ -7,6 +7,7 @@ export class ClientAdapter {
       id: Number.parseInt(client.id.toString()),
       name: client.name,
       email: client.email,
+      password: client.password,
       address: client.address,
       cep: client.cep,
       city: client.city,
@@ -18,7 +19,7 @@ export class ClientAdapter {
     };
   }
 
-  static toClient(client: ClientProps) {
+  static toClient(client: ClientProps): Client {
     return Client.create({
       name: client.name,
       email: client.email,
@@ -28,6 +29,22 @@ export class ClientAdapter {
       cnpjcpf: client.cnpjcpf,
       neighborhood: client.neighborhood,
       numberAddress: client.numberAddress,
+      password: client.password,
+      phone: client.phone,
+      uf: client.uf,
+    });
+  }
+
+  static toDomain(client: ClientPrisma) {
+    return Client.create({
+      name: client.name,
+      email: client.email,
+      address: client.address,
+      cep: client.cep,
+      city: client.city,
+      cnpjcpf: client.cnpjcpf,
+      neighborhood: client.neighborhood,
+      numberAddress: client.numberAdress,
       password: client.password,
       phone: client.phone,
       uf: client.uf,

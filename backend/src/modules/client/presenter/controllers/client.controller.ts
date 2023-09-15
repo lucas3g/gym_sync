@@ -1,6 +1,8 @@
 import { ZodValidationPipe } from '@/core/pipes/zod-validation-pipe';
 import {
+  BadRequestException,
   Body,
+  ConflictException,
   Controller,
   NotAcceptableException,
   Post,
@@ -8,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { z } from 'zod';
 import { CreateClientUseCase } from '../../domain/use-cases/create-client';
+import { ClientAlreadyExistsError } from '../../domain/use-cases/errors/client-already-exists-error';
 
 const createClientBodySchema = z.object({
   name: z.string(),
@@ -43,7 +46,14 @@ export class ClientController {
     const result = await this.createClientUseCase.execute(body);
 
     if (result.isLeft()) {
-      throw new NotAcceptableException(result.value.message);
+      const error = result.value;
+
+      switch (error.constructor) {
+        case ClientAlreadyExistsError:
+          throw new ConflictException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
     }
   }
 }

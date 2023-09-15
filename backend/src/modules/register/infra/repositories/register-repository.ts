@@ -9,32 +9,18 @@ export class RegisterRepository implements IRegisterRepository {
   constructor(private datasource: IRegisterDatasource) {}
 
   async create(user: User): Promise<void> {
-    try {
-      await this.datasource.create(user);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-    }
+    await this.datasource.create(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    try {
-      const result = await this.datasource.findByEmail(email);
+    const result = await this.datasource.findByEmail(email);
 
-      if (!result) {
-        return null;
-      }
-
-      const user = UserAdapter.toDomain(result);
-
-      return user;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-
+    if (!result) {
       return null;
     }
+
+    const user = UserAdapter.toDomain(result);
+
+    return user;
   }
 }

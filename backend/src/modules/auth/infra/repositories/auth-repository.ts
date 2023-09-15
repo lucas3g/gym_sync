@@ -9,22 +9,14 @@ export class AuthRepository implements IAuthRepository {
   constructor(private datasource: IAuthDatasource) {}
 
   async findByEmail(email: string): Promise<User | null> {
-    try {
-      const result = await this.datasource.findByEmail(email);
+    const result = await this.datasource.findByEmail(email);
 
-      if (!result) {
-        return null;
-      }
-
-      const user = UserAdapter.toDomain(result);
-
-      return user;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(error.message);
-      }
-
+    if (!result) {
       return null;
     }
+
+    const user = UserAdapter.toDomain(result);
+
+    return user;
   }
 }
