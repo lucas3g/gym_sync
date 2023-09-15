@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Client } from '../../domain/entities/client';
+import { Client, ClientProps } from '../../domain/entities/client';
 
 export class ClientAdapter {
   static toPrisma(client: Client): Prisma.ClientUncheckedCreateInput {
@@ -15,5 +15,21 @@ export class ClientAdapter {
       phone: client.phone,
       uf: client.uf,
     };
+  }
+
+  static toDomain(client: ClientProps) {
+    return Client.create({
+      name: client.name,
+      email: client.email,
+      address: client.address,
+      cep: client.cep,
+      city: client.city,
+      cnpjcpf: client.cnpjcpf,
+      neighborhood: client.neighborhood,
+      numberAddress: client.numberAddress,
+      password: client.password,
+      phone: client.phone,
+      uf: client.uf,
+    });
   }
 }
