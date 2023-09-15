@@ -52,7 +52,8 @@ model BranchCompany {
 model Client {
   id           Int       @id @default(autoincrement())
   name         String
-  cnpjcpf      String
+  email        String    @unique()
+  cnpjcpf      String    @unique()
   address      String
   numberAdress String    @map("number_address")
   neighborhood String

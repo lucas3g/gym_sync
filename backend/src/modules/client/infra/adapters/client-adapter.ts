@@ -6,6 +6,7 @@ export class ClientAdapter {
     return {
       id: Number.parseInt(client.id.toString()),
       name: client.name,
+      email: client.email,
       address: client.address,
       cep: client.cep,
       city: client.city,
@@ -17,7 +18,7 @@ export class ClientAdapter {
     };
   }
 
-  static toDomain(client: ClientProps) {
+  static toClient(client: ClientProps) {
     return Client.create({
       name: client.name,
       email: client.email,

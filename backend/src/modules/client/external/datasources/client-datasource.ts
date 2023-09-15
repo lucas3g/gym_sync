@@ -7,9 +7,20 @@ import { ClientAdapter } from '../../infra/adapters/client-adapter';
 @Injectable()
 export class ClientDatasource implements IClientDatasource {
   constructor(private prisma: PrismaService) {}
+
   async create(client: Client): Promise<void> {
     const clientPrisma = ClientAdapter.toPrisma(client);
 
     await this.prisma.client.create({ data: clientPrisma });
+  }
+
+  async findByCNPJCPF(cnpjcpf: string): Promise<boolean | null> {
+    const result = await this.prisma.client.findUnique({
+      where: {
+        cnpjcpf,
+      },
+    });
+
+    return result !== null;
   }
 }
