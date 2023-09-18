@@ -22,7 +22,15 @@ export class CreateClientUseCase {
     );
 
     if (clientWithSameCNPJCPF) {
-      return left(new ClientAlreadyExistsError(client.cnpjcpf));
+      return left(new ClientAlreadyExistsError('CNPJ/CPF', client.cnpjcpf));
+    }
+
+    const clientWithSameEmail = await this.clientRepository.findByEmail(
+      client.email
+    );
+
+    if (clientWithSameEmail) {
+      return left(new ClientAlreadyExistsError('Email', client.email));
     }
 
     const result = ClientAdapter.toClient(client);

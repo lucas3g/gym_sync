@@ -50,21 +50,21 @@ model BranchCompany {
 }
 
 model Client {
-  id           Int       @id @default(autoincrement())
-  name         String
-  email        String    @unique()
-  password     String
-  cnpjcpf      String    @unique()
-  address      String
-  numberAdress String    @map("number_address")
-  neighborhood String
-  cep          String
-  city         String
-  uf           String
-  phone        String
-  obs          String?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updateAt     DateTime? @updatedAt @map("updated_at")
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique()
+  password      String
+  cnpjcpf       String    @unique()
+  address       String
+  numberAddress String    @map("number_address")
+  neighborhood  String
+  cep           String
+  city          String
+  uf            String
+  phone         String
+  obs           String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updateAt      DateTime? @updatedAt @map("updated_at")
 
   accountsReceivable AccountReceivable[]
 

@@ -9,6 +9,7 @@ import { DatabaseModule } from '@/core/database/database.module';
 import { CryptographyModule } from '@/core/cryptography/cryptography.module';
 import { FetchClientUseCase } from './domain/use-cases/fetch-client-by-name';
 import { UpdateClientUseCase } from './domain/use-cases/update-client';
+import { DeleteClientUseCase } from './domain/use-cases/delete-client';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -19,6 +20,7 @@ import { UpdateClientUseCase } from './domain/use-cases/update-client';
     CreateClientUseCase,
     UpdateClientUseCase,
     FetchClientUseCase,
+    DeleteClientUseCase,
   ],
 })
 export class ClientModule {}
