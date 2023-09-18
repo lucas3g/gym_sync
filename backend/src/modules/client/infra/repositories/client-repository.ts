@@ -15,7 +15,11 @@ export class ClientRepository implements IClientRepository {
   async update(client: Client): Promise<Client> {
     const result = await this.datasource.update(client);
 
-    return ClientAdapter.toDomain(result);
+    return ClientAdapter.toClient(result);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    return await this.datasource.delete(id);
   }
 
   async findByCNPJCPF(cnpjcpf: string): Promise<Client | null> {
@@ -25,12 +29,22 @@ export class ClientRepository implements IClientRepository {
       return null;
     }
 
-    return ClientAdapter.toDomain(client);
+    return ClientAdapter.toClient(client);
+  }
+
+  async findByEmail(email: string): Promise<Client | null> {
+    const client = await this.datasource.findByEmail(email);
+
+    if (!client) {
+      return null;
+    }
+
+    return ClientAdapter.toClient(client);
   }
 
   async findByName(name: string): Promise<Client[]> {
     const clients = await this.datasource.findByName(name);
 
-    return clients.map(ClientAdapter.toDomain);
+    return clients.map(ClientAdapter.toClient);
   }
 }

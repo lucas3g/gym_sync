@@ -24,10 +24,28 @@ export class ClientDatasource implements IClientDatasource {
     });
   }
 
+  async delete(id: number): Promise<boolean> {
+    const result = await this.prisma.client.delete({
+      where: { id },
+    });
+
+    return result !== null;
+  }
+
   async findByCNPJCPF(cnpjcpf: string): Promise<PrismaClient | null> {
     const result = await this.prisma.client.findUnique({
       where: {
         cnpjcpf,
+      },
+    });
+
+    return result ?? null;
+  }
+
+  async findByEmail(email: string): Promise<PrismaClient | null> {
+    const result = await this.prisma.client.findUnique({
+      where: {
+        email,
       },
     });
 
@@ -40,6 +58,9 @@ export class ClientDatasource implements IClientDatasource {
         name: {
           contains: name,
         },
+      },
+      orderBy: {
+        name: 'asc',
       },
     });
 

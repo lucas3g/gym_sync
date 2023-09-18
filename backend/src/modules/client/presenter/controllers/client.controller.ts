@@ -4,6 +4,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   NotAcceptableException,
   Post,
@@ -19,6 +20,7 @@ import { ClientPresenter } from '../adapters/client-presenter';
 import { UpdateClientUseCase } from '../../domain/use-cases/update-client';
 import { ClientAdapter } from '../../infra/adapters/client-adapter';
 import { WrongDataUpdateClientError } from '../../domain/use-cases/errors/wrong-data-update-client-error';
+import { DeleteClientUseCase } from '../../domain/use-cases/delete-client';
 
 const createOrUpdateClientBodySchema = z.object({
   id: z.number().default(-1),
@@ -46,12 +48,19 @@ const fetchClientBodySchema = z.object({
 
 type FetchClientBodySchema = z.infer<typeof fetchClientBodySchema>;
 
+const deleteClientBodySchema = z.object({
+  id: z.number(),
+});
+
+type DeleteClientBodySchema = z.infer<typeof deleteClientBodySchema>;
+
 @Controller('/clients')
 export class ClientController {
   constructor(
     private createClientUseCase: CreateClientUseCase,
     private fetchClientUseCase: FetchClientUseCase,
-    private updateClientUseCase: UpdateClientUseCase
+    private updateClientUseCase: UpdateClientUseCase,
+    private deleteClientUseCase: DeleteClientUseCase
   ) {}
 
   @Post()
@@ -96,6 +105,28 @@ export class ClientController {
           throw new BadRequestException(error.message);
       }
     }
+  }
+
+  @Delete()
+  @UsePipes(new ZodValidationPipe(deleteClientBodySchema))
+  async delete(@Body() body: DeleteClientBodySchema) {
+    const { id } = body;
+    const result = await this.deleteClientUseCase.execute(id);
+
+    if (result.isLeft()) {
+      const error = result.value;
+
+      switch (error.constructor) {
+        case WrongDataUpdateClientError:
+          throw new ConflictException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
+    }
+
+    const deleted = result.value.deleted;
+
+    return { deleted };
   }
 
   @Get()
