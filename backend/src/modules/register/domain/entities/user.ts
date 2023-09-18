@@ -1,13 +1,17 @@
 import { Entity } from '@/core/entities/entity';
-import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 interface UserProps {
+  id?: string;
   name: string;
   email: string;
   password: string;
 }
 
 export class User extends Entity<UserProps> {
+  get id() {
+    return this.props.id;
+  }
+
   get name() {
     return this.props.name;
   }
@@ -20,8 +24,8 @@ export class User extends Entity<UserProps> {
     return this.props.password;
   }
 
-  static create(props: UserProps, id?: UniqueEntityID) {
-    const user = new User(props, id);
+  static create(props: UserProps) {
+    const user = new User(props);
 
     return user;
   }

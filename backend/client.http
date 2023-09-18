@@ -30,11 +30,11 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Lucas Silva",
-  "email": "lucas5@gmail.com",
+  "name": "Carlos Santos",
+  "email": "carlossantos@gmail.com",
   "password": "123456",
   "confirmPassword": "123456",
-  "cnpjcpf":"041.726.830-02",
+  "cnpjcpf":"546.345.343-02",
   "address":"Avenida 7 de Setembro",
   "numberAddress":"822",
   "neighborhood":"Centro",
@@ -43,3 +43,36 @@ Authorization: Bearer {{authToken}}
   "uf":"RS",
   "phone":"5499727330"
 }
+
+# @name update_client
+POST {{baseUrl}}/clients
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "id": "031e2eac-bf0c-4a5e-be73-7f274a26ad3b",
+  "name": "Carlos Santos",
+  "email": "carlossantos@gmail.com",
+  "password": "123456",
+  "confirmPassword": "123456",
+  "cnpjcpf":"546.345.343-02",
+  "address":"Avenida 7 de Setembro",
+  "numberAddress":"822",
+  "neighborhood":"Centro",
+  "cep":"99670-000",
+  "city":"Ronda Alta",
+  "uf":"RS",
+  "phone":"5499727330"
+}
+
+###
+
+# @name fetch_client_by_name
+GET {{baseUrl}}/clients
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Carlos"
+}
+

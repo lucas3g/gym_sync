@@ -15,6 +15,15 @@ export class ClientDatasource implements IClientDatasource {
     await this.prisma.client.create({ data: clientPrisma });
   }
 
+  async update(client: Client): Promise<PrismaClient> {
+    const clientPrisma = ClientAdapter.toPrisma(client);
+
+    return await this.prisma.client.update({
+      where: { id: clientPrisma.id },
+      data: clientPrisma,
+    });
+  }
+
   async findByCNPJCPF(cnpjcpf: string): Promise<PrismaClient | null> {
     const result = await this.prisma.client.findUnique({
       where: {
@@ -23,5 +32,17 @@ export class ClientDatasource implements IClientDatasource {
     });
 
     return result ?? null;
+  }
+
+  async findByName(name: string): Promise<PrismaClient[]> {
+    const result = await this.prisma.client.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+    });
+
+    return result;
   }
 }

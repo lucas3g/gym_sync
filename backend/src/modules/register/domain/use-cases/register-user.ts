@@ -39,6 +39,7 @@ export class RegisterUserUseCase {
     const hashedPassword = await this.hashGenerator.hash(password);
 
     const user = User.create({
+      id: '-1',
       name,
       email,
       password: hashedPassword,

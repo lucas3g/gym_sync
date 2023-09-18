@@ -1,7 +1,7 @@
 import { Entity } from '@/core/entities/entity';
-import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 export interface ClientProps {
+  id?: number;
   name: string;
   email: string;
   password: string;
@@ -16,6 +16,10 @@ export interface ClientProps {
 }
 
 export class Client extends Entity<ClientProps> {
+  get id() {
+    return this.props.id;
+  }
+
   get name() {
     return this.props.name;
   }
@@ -60,8 +64,8 @@ export class Client extends Entity<ClientProps> {
     return this.props.phone;
   }
 
-  static create(props: ClientProps, id?: UniqueEntityID) {
-    const client = new Client(props, id);
+  static create(props: ClientProps) {
+    const client = new Client(props);
 
     return client;
   }

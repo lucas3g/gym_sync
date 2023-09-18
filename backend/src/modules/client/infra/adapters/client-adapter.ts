@@ -4,7 +4,6 @@ import { Client, ClientProps } from '../../domain/entities/client';
 export class ClientAdapter {
   static toPrisma(client: Client): Prisma.ClientUncheckedCreateInput {
     return {
-      id: Number.parseInt(client.id.toString()),
       name: client.name,
       email: client.email,
       password: client.password,
@@ -21,6 +20,7 @@ export class ClientAdapter {
 
   static toClient(client: ClientProps): Client {
     return Client.create({
+      id: client.id,
       name: client.name,
       email: client.email,
       address: client.address,
@@ -37,6 +37,7 @@ export class ClientAdapter {
 
   static toDomain(client: ClientPrisma) {
     return Client.create({
+      id: client.id,
       name: client.name,
       email: client.email,
       address: client.address,
