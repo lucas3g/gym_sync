@@ -18,7 +18,7 @@ model User {
   email     String    @unique
   password  String
   createdAt DateTime  @default(now()) @map("created_at")
-  updateAt  DateTime? @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
   role      UserRole  @default(ADMIN)
 
   @@map("users")
@@ -29,7 +29,7 @@ model Company {
   name      String
   cnpj      String
   createdAt DateTime  @default(now()) @map("created_at")
-  updateAt  DateTime? @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   branchs BranchCompany[]
 
@@ -41,7 +41,7 @@ model BranchCompany {
   name      String
   companyId String    @map("company_id")
   createdAt DateTime  @default(now()) @map("created_at")
-  updateAt  DateTime? @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   company            Company             @relation(fields: [companyId], references: [id])
   accountsReceivable AccountReceivable[]
@@ -64,7 +64,7 @@ model Client {
   phone         String
   obs           String?
   createdAt     DateTime  @default(now()) @map("created_at")
-  updateAt      DateTime? @updatedAt @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   accountsReceivable AccountReceivable[]
 
@@ -80,7 +80,7 @@ model AccountReceivable {
   amount          Decimal
   date            DateTime  @default(now())
   createdAt       DateTime  @default(now()) @map("created_at")
-  updateAt        DateTime? @updatedAt @map("updated_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
 
   client Client        @relation(fields: [clientId], references: [id])
   branch BranchCompany @relation(fields: [branchCompanyId], references: [id])

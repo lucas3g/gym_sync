@@ -36,6 +36,8 @@ const createOrUpdateClientBodySchema = z.object({
   city: z.string(),
   uf: z.string().default('RS'),
   phone: z.string(),
+  obs: z.string().optional().default(''),
+  createdAt: z.date().optional().default(new Date()),
 });
 
 type CreateOrUpdateClientBodySchema = z.infer<
@@ -54,7 +56,21 @@ export class ClientController {
   @Post()
   @UsePipes(new ZodValidationPipe(createOrUpdateClientBodySchema))
   async create(@Body() body: CreateOrUpdateClientBodySchema) {
-    const { password, confirmPassword } = body;
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      cnpjcpf,
+      address,
+      numberAddress,
+      neighborhood,
+      cep,
+      city,
+      uf,
+      phone,
+      obs,
+    } = body;
 
     if (password !== confirmPassword) {
       throw new NotAcceptableException(
@@ -62,7 +78,20 @@ export class ClientController {
       );
     }
 
-    const result = await this.createClientUseCase.execute(body);
+    const result = await this.createClientUseCase.execute({
+      name,
+      email,
+      password,
+      cnpjcpf,
+      address,
+      numberAddress,
+      neighborhood,
+      cep,
+      city,
+      uf,
+      phone,
+      obs,
+    });
 
     if (result.isLeft()) {
       const error = result.value;
@@ -81,7 +110,40 @@ export class ClientController {
     @Body() body: CreateOrUpdateClientBodySchema,
     @Param('id') clientId: number
   ) {
-    const client = ClientAdapter.toClient(body);
+    const {
+      name,
+      email,
+      password,
+      cnpjcpf,
+      address,
+      numberAddress,
+      neighborhood,
+      cep,
+      city,
+      uf,
+      phone,
+      obs,
+      createdAt,
+    } = body;
+
+    const client = ClientAdapter.toClient({
+      id: clientId,
+      name,
+      email,
+      password,
+      cnpjcpf,
+      address,
+      numberAddress,
+      neighborhood,
+      cep,
+      city,
+      uf,
+      phone,
+      obs,
+      createdAt,
+      updatedAt: new Date(),
+    });
+
     const xClientId = Number.parseInt(clientId.toString());
 
     const result = await this.updateClientUseCase.execute(client, xClientId);

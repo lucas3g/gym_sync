@@ -1,5 +1,5 @@
 import { Client as ClientPrisma, Prisma } from '@prisma/client';
-import { Client, ClientProps } from '../../domain/entities/client';
+import { Client } from '../../domain/entities/client';
 
 export class ClientAdapter {
   static toPrisma(client: Client): Prisma.ClientUncheckedCreateInput {
@@ -18,7 +18,7 @@ export class ClientAdapter {
     };
   }
 
-  static toClient(client: ClientProps | ClientPrisma): Client {
+  static toClient(client: ClientPrisma): Client {
     return Client.create({
       id: client.id,
       name: client.name,
@@ -31,7 +31,10 @@ export class ClientAdapter {
       numberAddress: client.numberAddress,
       password: client.password,
       phone: client.phone,
+      obs: client.obs,
       uf: client.uf,
+      createdAt: client.createdAt,
+      updatedAt: client.updatedAt,
     });
   }
 }

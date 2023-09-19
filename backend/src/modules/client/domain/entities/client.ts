@@ -13,6 +13,9 @@ export interface ClientProps {
   city: string;
   uf: string;
   phone: string;
+  obs?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date | null;
 }
 
 export class Client extends Entity<ClientProps> {
@@ -62,6 +65,14 @@ export class Client extends Entity<ClientProps> {
 
   get phone() {
     return this.props.phone;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt;
   }
 
   static create(props: ClientProps) {
