@@ -15,13 +15,16 @@ type UpdateClientUseCaseResponse = Either<
 @Injectable()
 export class UpdateClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
-  async execute(client: Client): Promise<UpdateClientUseCaseResponse> {
+  async execute(
+    client: Client,
+    clientId: number
+  ): Promise<UpdateClientUseCaseResponse> {
     const clientWithSameCNPJCPF = await this.clientRepository.findByCNPJCPF(
       client.cnpjcpf
     );
 
     if (clientWithSameCNPJCPF) {
-      if (clientWithSameCNPJCPF.id !== client.id) {
+      if (clientWithSameCNPJCPF.id !== clientId) {
         return left(new ClientAlreadyExistsError('CNPJ/CPF', client.cnpjcpf));
       }
     }
@@ -31,12 +34,12 @@ export class UpdateClientUseCase {
     );
 
     if (clientWithSameEmail) {
-      if (clientWithSameEmail.id !== client.id) {
+      if (clientWithSameEmail.id !== clientId) {
         return left(new ClientAlreadyExistsError('Email', client.email));
       }
     }
 
-    const result = await this.clientRepository.update(client);
+    const result = await this.clientRepository.update(client, clientId);
 
     return right({ client: result });
   }

@@ -15,21 +15,19 @@ export class ClientDatasource implements IClientDatasource {
     await this.prisma.client.create({ data: clientPrisma });
   }
 
-  async update(client: Client): Promise<PrismaClient> {
+  async update(client: Client, clientId: number): Promise<PrismaClient> {
     const clientPrisma = ClientAdapter.toPrisma(client);
 
     return await this.prisma.client.update({
-      where: { id: clientPrisma.id },
+      where: { id: clientId },
       data: clientPrisma,
     });
   }
 
-  async delete(id: number): Promise<boolean> {
-    const result = await this.prisma.client.delete({
-      where: { id },
+  async delete(clientId: number): Promise<void> {
+    await this.prisma.client.delete({
+      where: { id: clientId },
     });
-
-    return result !== null;
   }
 
   async findByCNPJCPF(cnpjcpf: string): Promise<PrismaClient | null> {

@@ -12,14 +12,14 @@ export class ClientRepository implements IClientRepository {
     await this.datasource.create(client);
   }
 
-  async update(client: Client): Promise<Client> {
-    const result = await this.datasource.update(client);
+  async update(client: Client, clientId: number): Promise<Client> {
+    const result = await this.datasource.update(client, clientId);
 
     return ClientAdapter.toClient(result);
   }
 
-  async delete(id: number): Promise<boolean> {
-    return await this.datasource.delete(id);
+  async delete(clientId: number): Promise<void> {
+    await this.datasource.delete(clientId);
   }
 
   async findByCNPJCPF(cnpjcpf: string): Promise<Client | null> {

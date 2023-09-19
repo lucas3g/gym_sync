@@ -4,7 +4,6 @@ import { Client, ClientProps } from '../../domain/entities/client';
 export class ClientAdapter {
   static toPrisma(client: Client): Prisma.ClientUncheckedCreateInput {
     return {
-      id: client.id !== -1 ? client.id : undefined,
       name: client.name,
       email: client.email,
       password: client.password,

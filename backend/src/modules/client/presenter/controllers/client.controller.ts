@@ -6,7 +6,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotAcceptableException,
+  Param,
   Post,
   Put,
   UsePipes,
@@ -15,7 +17,6 @@ import { z } from 'zod';
 import { CreateClientUseCase } from '../../domain/use-cases/create-client';
 import { ClientAlreadyExistsError } from '../../domain/use-cases/errors/client-already-exists-error';
 import { FetchClientUseCase } from '../../domain/use-cases/fetch-client-by-name';
-import { FetchClientError } from '../../domain/use-cases/errors/fetch-client-error';
 import { ClientPresenter } from '../adapters/client-presenter';
 import { UpdateClientUseCase } from '../../domain/use-cases/update-client';
 import { ClientAdapter } from '../../infra/adapters/client-adapter';
@@ -23,7 +24,6 @@ import { WrongDataUpdateClientError } from '../../domain/use-cases/errors/wrong-
 import { DeleteClientUseCase } from '../../domain/use-cases/delete-client';
 
 const createOrUpdateClientBodySchema = z.object({
-  id: z.number().default(-1),
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
@@ -41,18 +41,6 @@ const createOrUpdateClientBodySchema = z.object({
 type CreateOrUpdateClientBodySchema = z.infer<
   typeof createOrUpdateClientBodySchema
 >;
-
-const fetchClientBodySchema = z.object({
-  name: z.string(),
-});
-
-type FetchClientBodySchema = z.infer<typeof fetchClientBodySchema>;
-
-const deleteClientBodySchema = z.object({
-  id: z.number(),
-});
-
-type DeleteClientBodySchema = z.infer<typeof deleteClientBodySchema>;
 
 @Controller('/clients')
 export class ClientController {
@@ -88,12 +76,15 @@ export class ClientController {
     }
   }
 
-  @Put()
-  @UsePipes(new ZodValidationPipe(createOrUpdateClientBodySchema))
-  async update(@Body() body: CreateOrUpdateClientBodySchema) {
+  @Put('/:id')
+  async update(
+    @Body() body: CreateOrUpdateClientBodySchema,
+    @Param('id') clientId: number
+  ) {
     const client = ClientAdapter.toClient(body);
+    const xClientId = Number.parseInt(clientId.toString());
 
-    const result = await this.updateClientUseCase.execute(client);
+    const result = await this.updateClientUseCase.execute(client, xClientId);
 
     if (result.isLeft()) {
       const error = result.value;
@@ -107,44 +98,28 @@ export class ClientController {
     }
   }
 
-  @Delete()
-  @UsePipes(new ZodValidationPipe(deleteClientBodySchema))
-  async delete(@Body() body: DeleteClientBodySchema) {
-    const { id } = body;
-    const result = await this.deleteClientUseCase.execute(id);
+  @Delete('/:id')
+  @HttpCode(204)
+  async delete(@Param('id') clientId: number) {
+    const xClientId = Number.parseInt(clientId.toString());
+
+    const result = await this.deleteClientUseCase.execute(xClientId);
 
     if (result.isLeft()) {
       const error = result.value;
 
-      switch (error.constructor) {
-        case WrongDataUpdateClientError:
-          throw new ConflictException(error.message);
-        default:
-          throw new BadRequestException(error.message);
-      }
+      throw new BadRequestException(error.message);
     }
-
-    const deleted = result.value.deleted;
-
-    return { deleted };
   }
 
-  @Get()
-  @UsePipes(new ZodValidationPipe(fetchClientBodySchema))
-  async fetch(@Body() body: FetchClientBodySchema) {
-    const { name } = body;
-
+  @Get('/:name')
+  async fetch(@Param('name') name: string) {
     const result = await this.fetchClientUseCase.execute(name);
 
     if (result.isLeft()) {
       const error = result.value;
 
-      switch (error.constructor) {
-        case FetchClientError:
-          throw new ConflictException(error.message);
-        default:
-          throw new BadRequestException(error.message);
-      }
+      throw new BadRequestException(error.message);
     }
 
     const clients = result.value.clients;

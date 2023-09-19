@@ -3,19 +3,14 @@ import { IClientRepository } from '../repositories/client-repository';
 import { Injectable } from '@nestjs/common';
 import { WrongDataUpdateClientError } from './errors/wrong-data-update-client-error';
 
-type DeleteClientUseCaseResponse = Either<
-  WrongDataUpdateClientError,
-  {
-    deleted: boolean;
-  }
->;
+type DeleteClientUseCaseResponse = Either<WrongDataUpdateClientError, void>;
 
 @Injectable()
 export class DeleteClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
-  async execute(id: number): Promise<DeleteClientUseCaseResponse> {
-    const result = await this.clientRepository.delete(id);
+  async execute(clientId: number): Promise<DeleteClientUseCaseResponse> {
+    const result = await this.clientRepository.delete(clientId);
 
-    return right({ deleted: result });
+    return right(result);
   }
 }
