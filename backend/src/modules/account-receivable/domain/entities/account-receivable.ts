@@ -1,18 +1,20 @@
 import { Entity } from '@/core/entities/entity';
+import { AccountInstallment } from './account-installment';
 
-export interface AccountsReceivableProps {
+export interface AccountReceivableProps {
   id?: string;
   clientId: number;
   sdoc: string;
   ndoc: string;
   branchCompanyId: number;
   amount: number;
-  date: Date;
-  createdAt: Date;
+  installment: number;
+  accountInstallment: AccountInstallment[];
+  createdAt?: Date;
   updatedAt?: Date | null;
 }
 
-export class AccountsReceivable extends Entity<AccountsReceivableProps> {
+export class AccountReceivable extends Entity<AccountReceivableProps> {
   get id() {
     return this.props.id;
   }
@@ -37,8 +39,12 @@ export class AccountsReceivable extends Entity<AccountsReceivableProps> {
     return this.props.amount;
   }
 
-  get date() {
-    return this.props.date;
+  get installment() {
+    return this.props.installment;
+  }
+
+  get accountInstallment() {
+    return this.props.accountInstallment;
   }
 
   get createdAt() {
@@ -49,8 +55,8 @@ export class AccountsReceivable extends Entity<AccountsReceivableProps> {
     return this.props.updatedAt;
   }
 
-  static create(props: AccountsReceivableProps) {
-    const accountsReceivable = new AccountsReceivable(props);
+  static create(props: AccountReceivableProps) {
+    const accountsReceivable = new AccountReceivable(props);
 
     return accountsReceivable;
   }

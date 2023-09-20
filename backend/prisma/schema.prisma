@@ -76,14 +76,30 @@ model AccountReceivable {
   clientId        Int       @map("client_id")
   sdoc            String
   ndoc            String
+  installment     Int
   branchCompanyId Int       @map("branch_company_id")
   amount          Decimal
-  date            DateTime  @default(now())
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime? @updatedAt @map("updated_at")
 
-  client Client        @relation(fields: [clientId], references: [id])
-  branch BranchCompany @relation(fields: [branchCompanyId], references: [id])
+  client             Client               @relation(fields: [clientId], references: [id])
+  branch             BranchCompany        @relation(fields: [branchCompanyId], references: [id])
+  accountInstallment AccountInstallment[]
 
   @@map("accounts_receivable")
+}
+
+model AccountInstallment {
+  id                  String    @id @default(uuid())
+  installment         Int
+  amount              Decimal
+  remains             Decimal   @default(0.00)
+  dueDate             DateTime  @default(now()) @map("due_date")
+  accountReceivableId String    @map("account_receivable_id")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime? @updatedAt @map("updated_at")
+
+  accountReceivable AccountReceivable @relation(fields: [accountReceivableId], references: [id])
+
+  @@map("accounts_installments")
 }
