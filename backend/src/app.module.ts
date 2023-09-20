@@ -5,6 +5,7 @@ import { RegisterModule } from './modules/register/register.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EnvModule } from './core/env/env.module';
 import { ClientModule } from './modules/client/client.module';
+import { AccountsReceivableModule } from './modules/account-receivable/accounts-receivable.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ClientModule } from './modules/client/client.module';
     RegisterModule,
     AuthModule,
     ClientModule,
+    AccountsReceivableModule,
   ],
 })
 export class AppModule {}

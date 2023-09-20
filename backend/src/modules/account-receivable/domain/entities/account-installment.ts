@@ -6,7 +6,7 @@ interface AccountInstallmentProps {
   amount: number;
   remains: number;
   dueDate: Date;
-  accountReceivableId: string;
+  accountReceivableId?: string;
   createdAt?: Date;
   updatedAt?: Date | null;
 }
