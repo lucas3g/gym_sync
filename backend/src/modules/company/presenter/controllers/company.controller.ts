@@ -4,6 +4,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -18,6 +19,8 @@ import { FetchCompaniesUseCase } from '../../domain/use-cases/fetch-companies-us
 import { CompanyPresenter } from '../adapters/company-presenter';
 import { UpdateCompanyUseCase } from '../../domain/use-cases/update-company';
 import { CompanyNotExistsError } from '../../domain/use-cases/errors/company-not-exists-error';
+import { DeleteCompanyUseCase } from '../../domain/use-cases/delete-company';
+import { CompanyHasBranchError } from '../../domain/use-cases/errors/company-has-branch-error';
 
 const createCompanyBodySchema = z.object({
   name: z.string(),
@@ -31,6 +34,7 @@ export class CompanyController {
   constructor(
     private createCompanyUseCase: CreateCompanyUseCase,
     private updateCompanyUseCase: UpdateCompanyUseCase,
+    private deleteCompanyUseCase: DeleteCompanyUseCase,
     private fetchCompaniesUseCase: FetchCompaniesUseCase
   ) {}
 
@@ -82,6 +86,24 @@ export class CompanyController {
     const xCompany = result.value.company;
 
     return { company: CompanyPresenter.toJSON(xCompany) };
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') companyId: string) {
+    const result = await this.deleteCompanyUseCase.execute(companyId);
+
+    if (result.isLeft()) {
+      const error = result.value;
+
+      switch (error.constructor) {
+        case CompanyNotExistsError:
+          throw new ConflictException(error.message);
+        case CompanyHasBranchError:
+          throw new ConflictException(error.message);
+        default:
+          throw new BadRequestException(error.message);
+      }
+    }
   }
 
   @Get()

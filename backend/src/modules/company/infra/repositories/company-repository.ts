@@ -22,6 +22,10 @@ export class CompanyRepository implements ICompanyRepository {
     return result;
   }
 
+  async delete(companyId: string): Promise<void | null | boolean> {
+    return await this.datasource.delete(companyId);
+  }
+
   async fecth(): Promise<Company[]> {
     const result = await this.datasource.fetch();
 

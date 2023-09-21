@@ -9,6 +9,7 @@ import { DatabaseModule } from '@/core/database/database.module';
 import { CryptographyModule } from '@/core/cryptography/cryptography.module';
 import { FetchCompaniesUseCase } from './domain/use-cases/fetch-companies-use-case';
 import { UpdateCompanyUseCase } from './domain/use-cases/update-company';
+import { DeleteCompanyUseCase } from './domain/use-cases/delete-company';
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -18,6 +19,7 @@ import { UpdateCompanyUseCase } from './domain/use-cases/update-company';
     { provide: ICompanyRepository, useClass: CompanyRepository },
     CreateCompanyUseCase,
     UpdateCompanyUseCase,
+    DeleteCompanyUseCase,
     FetchCompaniesUseCase,
   ],
 })
