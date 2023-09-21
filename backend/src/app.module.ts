@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { EnvModule } from './core/env/env.module';
 import { ClientModule } from './modules/client/client.module';
 import { AccountsReceivableModule } from './modules/account-receivable/accounts-receivable.module';
+import { CompanyModule } from './modules/company/company.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AccountsReceivableModule } from './modules/account-receivable/accounts-
     EnvModule,
     RegisterModule,
     AuthModule,
+    CompanyModule,
     ClientModule,
     AccountsReceivableModule,
   ],
