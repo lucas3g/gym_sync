@@ -8,31 +8,6 @@ import { CompanyAdapter } from '../../infra/adapters/company-adapter';
 @Injectable()
 export class CompanyDatasource implements ICompanyDatasource {
   constructor(private prisma: PrismaService) {}
-  async delete(companyId: string): Promise<void | null | boolean> {
-    const exists = await this.prisma.company.findUnique({
-      where: { id: companyId },
-    });
-
-    if (exists) {
-      const branch = await this.prisma.branchCompany.findFirst({
-        where: {
-          companyId,
-        },
-      });
-
-      if (!branch) {
-        await this.prisma.company.delete({
-          where: { id: companyId },
-        });
-
-        return;
-      }
-
-      return true;
-    }
-
-    return null;
-  }
 
   async create(company: Company): Promise<void> {
     await this.prisma.company.create({
@@ -58,6 +33,32 @@ export class CompanyDatasource implements ICompanyDatasource {
       });
 
       return result;
+    }
+
+    return null;
+  }
+
+  async delete(companyId: string): Promise<void | null | boolean> {
+    const exists = await this.prisma.company.findUnique({
+      where: { id: companyId },
+    });
+
+    if (exists) {
+      const branch = await this.prisma.branchCompany.findFirst({
+        where: {
+          companyId,
+        },
+      });
+
+      if (!branch) {
+        await this.prisma.company.delete({
+          where: { id: companyId },
+        });
+
+        return;
+      }
+
+      return true;
     }
 
     return null;
